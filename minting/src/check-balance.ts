@@ -5,7 +5,7 @@
  * Run: npm run check-balance
  */
 
-import { BlockfrostProvider, MeshWallet } from "@meshsdk/core";
+import { BlockfrostProvider, MeshWallet, parseAssetUnit } from "@meshsdk/core";
 import { getConfig, TOKEN_TICKER } from "./config";
 
 async function main() {
@@ -46,11 +46,11 @@ async function main() {
   const ada = lovelace ? (Number(lovelace.quantity) / 1_000_000).toFixed(6) : "0";
   console.log(`  ADA      : ${ada} ADA`);
 
-  const freshTokens = balance.filter(
-    (b) =>
-      b.unit !== "lovelace" &&
-      b.assetName?.toUpperCase().includes(TOKEN_TICKER)
-  );
+  const freshTokens = balance.filter((b) => {
+    if (b.unit === "lovelace") return false;
+    const { assetName } = parseAssetUnit(b.unit);
+    return assetName.toUpperCase().includes(TOKEN_TICKER);
+  });
 
   if (freshTokens.length > 0) {
     freshTokens.forEach((t) => {

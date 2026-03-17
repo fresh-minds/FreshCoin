@@ -27,7 +27,6 @@ import {
   Transaction,
   ForgeScript,
   resolveSlotNo,
-  type Asset,
   type Mint,
 } from "@meshsdk/core";
 import { getConfig, TOKEN_NAME, TOKEN_TICKER, TOTAL_SUPPLY, TOKEN_METADATA } from "./config";

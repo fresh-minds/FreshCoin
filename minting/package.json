@@ -1,0 +1,24 @@
+{
+  "name": "freshcoin-minting",
+  "version": "1.0.0",
+  "description": "FreshCoin (FRESH) token minting scripts for Cardano",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "generate-wallet": "npx ts-node src/generate-wallet.ts",
+    "check-balance": "npx ts-node src/check-balance.ts",
+    "mint": "npx ts-node src/mint.ts"
+  },
+  "dependencies": {
+    "@meshsdk/core": "^1.7.2",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

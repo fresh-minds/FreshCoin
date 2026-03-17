@@ -11,9 +11,14 @@
  *     Never share or commit it.
  */
 
+import * as dotenv from "dotenv";
+dotenv.config();
 import { MeshWallet } from "@meshsdk/core";
 
 async function main() {
+  const network = (process.env.NETWORK ?? "preprod") as "preprod" | "mainnet";
+  const networkId = network === "mainnet" ? 1 : 0;
+
   console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log("  FreshCoin — Wallet Generator");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
@@ -26,9 +31,8 @@ async function main() {
   console.log(mnemonic.join(" "));
   console.log("─────────────────────────────────────────────────\n");
 
-  // Derive the first address (index 0) for preprod network
   const wallet = new MeshWallet({
-    networkId: 0, // 0 = testnet/preprod, 1 = mainnet
+    networkId,
     fetcher: undefined as any,
     key: {
       type: "mnemonic",
@@ -40,17 +44,22 @@ async function main() {
   const unusedAddresses = await wallet.getUnusedAddresses();
   const walletAddress = address ?? unusedAddresses[0];
 
-  console.log("📬  Wallet address (preprod testnet):");
+  console.log(`📬  Wallet address (${network}):`);
   console.log("─────────────────────────────────────────────────");
   console.log(walletAddress);
   console.log("─────────────────────────────────────────────────\n");
 
+  const fundingInstructions =
+    network === "mainnet"
+      ? "  2. Send at least 5 ADA to the address above from your existing wallet or exchange."
+      : "  2. Fund your preprod wallet with free test ADA:\n" +
+        "     https://docs.cardano.org/cardano-testnets/tools/faucet\n" +
+        "     (Paste your address above into the faucet — get 10,000 tADA)";
+
   console.log("📋  Next steps:");
   console.log("  1. Copy the mnemonic above into your .env file:");
   console.log('     WALLET_MNEMONIC="word1 word2 ... word24"');
-  console.log("  2. Fund your preprod wallet with free test ADA:");
-  console.log("     https://docs.cardano.org/cardano-testnets/tools/faucet");
-  console.log("     (Paste your address above into the faucet — get 10,000 tADA)");
+  console.log(fundingInstructions);
   console.log("  3. Run `npm run check-balance` to confirm funds arrived");
   console.log("  4. Run `npm run mint` to mint your FRESH tokens\n");
 }
